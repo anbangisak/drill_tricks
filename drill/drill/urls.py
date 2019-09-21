@@ -17,7 +17,8 @@ from django.contrib import admin
 from django.urls import path
 from rest_framework import routers, serializers, viewsets
 from steel.views import (
-    fetch_all, get_units_adv, avg_turn_over, avg_chg_high_low)
+    fetch_all, get_units_adv, avg_turn_over, avg_chg_high_low,
+    avg_open_close_by_month)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -25,4 +26,5 @@ urlpatterns = [
     path('get_units_adv/', get_units_adv, name='get_units_adv'),
     path('avg_turn_over/', avg_turn_over, name='avg_turn_over'),
     path('avg_chg_high_low/', avg_chg_high_low, name='avg_chg_high_low'),
+    path('avg_open_close_by_month/', avg_open_close_by_month, name='avg_open_close_by_month'),
 ]

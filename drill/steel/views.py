@@ -2,6 +2,7 @@ from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.db.models import F, Avg
+from django.db.models.functions import ExtractMonth
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -65,4 +66,19 @@ def avg_chg_high_low(request):
         units = ads.filter_by_date(request)
         avg_chg = units.annotate(diff=F('high')-F('low')).aggregate(avg_diff=Avg('diff'))
         return JsonResponse(avg_chg, safe=False)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_exempt
+def avg_open_close_by_month(request):
+    """
+    Returns average change in difference of High and Low
+    """
+
+    if request.method == 'GET':
+        units = AdUnits.objects.all()
+        avg_opn_cls = list(units.annotate(month=ExtractMonth('date')).values('month').annotate(
+            open_avg=Avg('open'), close_avg=Avg('close')).values(
+                'open_avg', 'close_avg', 'month'))
+        return JsonResponse(avg_opn_cls, safe=False)
     return Response(status=status.HTTP_400_BAD_REQUEST)
