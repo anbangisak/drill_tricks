@@ -16,9 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework import routers, serializers, viewsets
-from steel.views import fetch_all
+from steel.views import fetch_all, get_units_adv
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('fetch-all/', fetch_all, name='fetch_all'),
+    path('get_units_adv/', get_units_adv, name='get_units_adv'),
 ]
