@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import F
+from django.db.models import F, Avg
 from rest_framework import status
 from rest_framework.response import Response
 
@@ -46,4 +46,9 @@ def avg_turn_over(request):
     Fetches Average Turn over between date range
     """
 
-    pass
+    ads = AdUnits()
+    if request.method == 'POST':
+        units = ads.filter_by_date(request)
+        avg_units = units.aggregate(Avg('turnover'))
+        return JsonResponse({'average_turnover': avg_units['turnover__avg']}, safe=False)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
