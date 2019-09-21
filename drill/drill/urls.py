@@ -16,11 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from rest_framework import routers, serializers, viewsets
-from steel.views import fetch_all, get_units_adv, avg_turn_over
+from steel.views import (
+    fetch_all, get_units_adv, avg_turn_over, avg_chg_high_low)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('fetch-all/', fetch_all, name='fetch_all'),
     path('get_units_adv/', get_units_adv, name='get_units_adv'),
     path('avg_turn_over/', avg_turn_over, name='avg_turn_over'),
+    path('avg_chg_high_low/', avg_chg_high_low, name='avg_chg_high_low'),
 ]

@@ -52,3 +52,17 @@ def avg_turn_over(request):
         avg_units = units.aggregate(Avg('turnover'))
         return JsonResponse({'average_turnover': avg_units['turnover__avg']}, safe=False)
     return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_exempt
+def avg_chg_high_low(request):
+    """
+    Returns average change in difference of High and Low
+    """
+
+    ads = AdUnits()
+    if request.method == 'POST':
+        units = ads.filter_by_date(request)
+        avg_chg = units.annotate(diff=F('high')-F('low')).aggregate(avg_diff=Avg('diff'))
+        return JsonResponse(avg_chg, safe=False)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
