@@ -1,7 +1,7 @@
 from django.shortcuts import render
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from django.db.models import F, Avg, Min, Max
+from django.db.models import F, Q, Avg, Min, Max
 from django.db.models.functions import ExtractMonth, ExtractWeekDay
 from rest_framework import status
 from rest_framework.response import Response
@@ -101,4 +101,18 @@ def turnover_by_day(request):
         for idx, wk in enumerate(turnovr_by_wkday):
             turnovr_by_wkday[idx].update({'week_name': ads.WEEK[wk['weekday']]})
         return JsonResponse(turnovr_by_wkday, safe=False)
+    return Response(status=status.HTTP_400_BAD_REQUEST)
+
+
+@csrf_exempt
+def neg_volatility(request):
+    """
+    Returns average, minimum and maximum value of turnover by weekday / day name
+    """
+
+    ads = AdUnits()
+    if request.method == 'GET':
+        units = AdUnits.objects.all().filter(Q(open=F('high')))
+        neg_volate = units.annotate(diff=F('high')-F('low')).order_by('id')[:10]
+        return JsonResponse(list(neg_volate.values()), safe=False)
     return Response(status=status.HTTP_400_BAD_REQUEST)
