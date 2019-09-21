@@ -19,6 +19,9 @@ class AdUnits(BaseStamp):
     """
     AdUnits Intel for Distribution and Analytics
     """
+
+    WEEK = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
+
     date = models.DateField(blank=True)
     open = models.FloatField(default=0.0)
     close = models.FloatField(default=0.0)
